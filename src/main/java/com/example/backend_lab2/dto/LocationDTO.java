@@ -47,11 +47,11 @@ public class LocationDTO {
         this.categoryId = categoryId;
     }
 
-    public @NotNull Boolean getPublic() {
+    public @NotNull Boolean getIsPublic() {
         return isPublic;
     }
 
-    public void setPublic(@NotNull Boolean aPublic) {
+    public void setIsPublic(@NotNull Boolean aPublic) {
         isPublic = aPublic;
     }
 
