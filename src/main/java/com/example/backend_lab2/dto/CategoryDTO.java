@@ -4,6 +4,13 @@ import jakarta.validation.constraints.NotNull;
 
 public class CategoryDTO {
 
+    public CategoryDTO(Long id, String name, String symbol, String description) {
+        this.id = id;
+        this.name = name;
+        this.symbol = symbol;
+        this.description = description;
+    }
+
     private Long id;
 
     @NotNull

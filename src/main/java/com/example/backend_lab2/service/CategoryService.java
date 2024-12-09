@@ -2,6 +2,7 @@ package com.example.backend_lab2.service;
 
 import com.example.backend_lab2.dto.CategoryDTO;
 import com.example.backend_lab2.entity.Category;
+import com.example.backend_lab2.exception.ResourceNotFoundException;
 import com.example.backend_lab2.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,12 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
+    public CategoryDTO getCategoryById(Long id) {
+        return repository.findById(id)
+                .map(category -> new CategoryDTO(category.getId(), category.getName(), category.getSymbol(), category.getDescription()))
+                .orElseThrow(() -> new ResourceNotFoundException("Category with not found with id: " + id));
+    }
+
     public CategoryDTO createCategory(CategoryDTO dto) {
         if (repository.existsByName(dto.getName())) {
             throw new IllegalArgumentException("Category with this name already exists.");
@@ -34,11 +41,8 @@ public class CategoryService {
     }
 
     private CategoryDTO convertToDTO(Category category) {
-        CategoryDTO dto = new CategoryDTO();
-        dto.setId(category.getId());
-        dto.setName(category.getName());
-        dto.setDescription(category.getDescription());
-        dto.setSymbol(category.getSymbol());
-        return dto;
+        return new CategoryDTO(category.getId(), category.getName(), category.getSymbol(), category.getDescription());
     }
+
+
 }
