@@ -16,22 +16,23 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
+        http
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(GET, "/api/categories").permitAll()
-                        .requestMatchers(GET, "/api/categories/{id}").permitAll()
-                        .requestMatchers(POST, "/api/categories/**").hasAuthority("SCOPE_admin")
+                        .requestMatchers(GET, "/api/categories/**").permitAll()
+                        .requestMatchers(POST, "/api/categories/**").hasAuthority("SCOPE_ADMIN")
 
-                        .requestMatchers(GET, "/api/locations/public").permitAll()
-                        .requestMatchers(GET, "/api/locations/public/{id}").permitAll()
-                        .requestMatchers(GET, "/api/locations/user").authenticated()
-                        .requestMatchers(POST, "/api/locations").authenticated()
+                        .requestMatchers(GET, "/api/locations/public/**").permitAll()
+                        .requestMatchers(GET, "/api/locations/public/category/**").permitAll()
+                        .requestMatchers(GET, "/api/locations/radius").permitAll()
+                        .requestMatchers(GET, "/api/locations/user/**").authenticated()
+                        .requestMatchers(POST, "/api/locations/**").authenticated()
                         .requestMatchers(PUT, "/api/locations/**").authenticated()
+                        .requestMatchers(DELETE, "/api/locations/**").authenticated()
+
                         .anyRequest().authenticated()
                 )
-                .oauth2ResourceServer((oauth2) -> oauth2
-                        .jwt(Customizer.withDefaults())
-                );
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         return http.build();
     }
 }

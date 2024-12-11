@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.geolatte.geom.G2D;
 import org.geolatte.geom.Point;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -22,31 +24,36 @@ public class Location {
     @Column(nullable = false, length = 150)
     private String name;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @NotNull
+    @Column(name = "category_id", nullable = false)
+    private Long categoryId;
 
     @NotNull
     @Column(name = "user_id", nullable = false)
     private String userId;
 
     @NotNull
-    @Column(nullable = false)
-    private Boolean isPublic = true;
+    @Column(name = "is_public", nullable = false)
+    private Boolean isPublic;
 
     @Size(max = 500)
-    @Column(length = 500)
+    @Column(length = 500, columnDefinition = "TEXT")
     private String description;
 
+    @NotNull
     @Column(name = "coordinate", columnDefinition = "GEOMETRY", nullable = false)
     private Point<G2D> coordinate;
 
     @NotNull
+    @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column
     private LocalDateTime lastModified;
+
+    private boolean deleted = false;
 
     public Long getId() {
         return id;
@@ -64,12 +71,12 @@ public class Location {
         this.name = name;
     }
 
-    public Category getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategoryId(Long category) {
+        this.categoryId = category;
     }
 
     public @NotNull String getUserId() {
@@ -80,12 +87,12 @@ public class Location {
         this.userId = userId;
     }
 
-    public @NotNull Boolean getIsPublic() {
+    public @NotNull boolean isPublic() {
         return isPublic;
     }
 
-    public void setIsPublic(@NotNull Boolean aPublic) {
-        isPublic = aPublic;
+    public void setPublic(@NotNull boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     public @Size(max = 500) String getDescription() {
@@ -96,7 +103,7 @@ public class Location {
         this.description = description;
     }
 
-    public Point<G2D> getCoordinate() {
+    public @NotNull Point<G2D> getCoordinate() {
         return coordinate;
     }
 
@@ -118,5 +125,13 @@ public class Location {
 
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

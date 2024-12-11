@@ -1,6 +1,7 @@
 package com.example.backend_lab2.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -9,11 +10,10 @@ import jakarta.validation.constraints.Size;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @Size(max = 255)
-    @NotNull
+    @NotBlank
     @Column(nullable = false, unique = true)
     private String name;
 

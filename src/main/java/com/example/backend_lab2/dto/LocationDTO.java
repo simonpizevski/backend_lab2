@@ -1,27 +1,17 @@
 package com.example.backend_lab2.dto;
 
-import jakarta.validation.constraints.NotNull;
-import org.geolatte.geom.G2D;
-import org.geolatte.geom.Point;
+import java.time.LocalDateTime;
 
 public class LocationDTO {
-
     private Long id;
-
-    @NotNull
     private String name;
-
-    @NotNull
     private Long categoryId;
-
-    @NotNull
-    private Boolean isPublic;
-
-    @NotNull
-    private Point<G2D> coordinate;
-
-    @NotNull
+    private String userId;
+    private boolean isPublic;
     private String description;
+    private String coordinate;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModified;
 
     public Long getId() {
         return id;
@@ -31,43 +21,67 @@ public class LocationDTO {
         this.id = id;
     }
 
-    public @NotNull String getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(@NotNull String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public @NotNull Long getCategoryId() {
+    public Long getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(@NotNull Long categoryId) {
+    public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
     }
 
-    public @NotNull Boolean getIsPublic() {
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public boolean isPublic() {
         return isPublic;
     }
 
-    public void setIsPublic(@NotNull Boolean aPublic) {
-        isPublic = aPublic;
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
-    public @NotNull Point<G2D> getCoordinate() {
-        return coordinate;
-    }
-
-    public void setCoordinate(@NotNull Point<G2D> coordinate) {
-        this.coordinate = coordinate;
-    }
-
-    public @NotNull String getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(@NotNull String description) {
+    public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCoordinate() {
+        return coordinate;
+    }
+
+    public void setCoordinate(String coordinate) {
+        this.coordinate = coordinate;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
     }
 }

@@ -2,7 +2,6 @@ package com.example.backend_lab2.service;
 
 import com.example.backend_lab2.dto.CategoryDTO;
 import com.example.backend_lab2.entity.Category;
-import com.example.backend_lab2.exception.ResourceNotFoundException;
 import com.example.backend_lab2.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,36 +11,46 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryService {
 
-    private CategoryRepository repository;
+    private final CategoryRepository categoryRepository;
 
-    public List<CategoryDTO> getAllCategories() {
-        return repository.findAll()
-                .stream()
-                .map(this::convertToDTO)
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
+    public List<CategoryDTO> findAllCategories() {
+        return categoryRepository.findAll().stream()
+                .map(category -> {
+                    CategoryDTO dto = new CategoryDTO();
+                    dto.setId(category.getId());
+                    dto.setName(category.getName());
+                    dto.setSymbol(category.getSymbol());
+                    dto.setDescription(category.getDescription());
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
-    public CategoryDTO getCategoryById(Long id) {
-        return repository.findById(id)
-                .map(category -> new CategoryDTO(category.getId(), category.getName(), category.getSymbol(), category.getDescription()))
-                .orElseThrow(() -> new ResourceNotFoundException("Category with not found with id: " + id));
+    public CategoryDTO findCategoryById(Long id) {
+        return categoryRepository.findById(id)
+                .map(category -> {
+                    CategoryDTO dto = new CategoryDTO();
+                    dto.setId(category.getId());
+                    dto.setName(category.getName());
+                    dto.setSymbol(category.getSymbol());
+                    dto.setDescription(category.getDescription());
+                    return dto;
+                }).orElseThrow(() -> new RuntimeException("Category not found"));
     }
 
-    public CategoryDTO createCategory(CategoryDTO dto) {
-        if (repository.existsByName(dto.getName())) {
-            throw new IllegalArgumentException("Category with this name already exists.");
+    public void createCategory(CategoryDTO categoryDTO) {
+        if (categoryRepository.findByName(categoryDTO.getName()).isPresent()) {
+            throw new RuntimeException("Category name already exists");
         }
-
         Category category = new Category();
-        category.setName(dto.getName());
-        category.setDescription(dto.getDescription());
-        category.setSymbol(dto.getSymbol());
-        Category saved = repository.save(category);
-        return convertToDTO(saved);
-    }
-
-    private CategoryDTO convertToDTO(Category category) {
-        return new CategoryDTO(category.getId(), category.getName(), category.getSymbol(), category.getDescription());
+        category.setName(categoryDTO.getName());
+        category.setSymbol(categoryDTO.getSymbol());
+        category.setDescription(categoryDTO.getDescription());
+        categoryRepository.save(category);
     }
 
 

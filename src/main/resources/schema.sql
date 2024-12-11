@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS category
 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
     symbol      VARCHAR(255),
     description TEXT
@@ -8,15 +8,16 @@ CREATE TABLE IF NOT EXISTS category
 
 CREATE TABLE IF NOT EXISTS location
 (
-    id            INT AUTO_INCREMENT PRIMARY KEY,
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
     name          VARCHAR(255) NOT NULL,
-    category_id   INT,
+    category_id BIGINT,
     user_id       VARCHAR(255) NOT NULL,
-    status        VARCHAR(50) DEFAULT 'public',
+    is_public   BOOLEAN DEFAULT TRUE,
     last_modified TIMESTAMP,
     description   TEXT,
     coordinate    GEOMETRY     NOT NULL SRID 4326,
     created_at    TIMESTAMP,
+    deleted     BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (category_id) REFERENCES category (id)
 );
 

@@ -2,7 +2,7 @@ package com.example.backend_lab2.controller;
 
 import com.example.backend_lab2.dto.CategoryDTO;
 import com.example.backend_lab2.service.CategoryService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,20 +11,25 @@ import java.util.List;
 @RequestMapping("/api/categories")
 public class CategoryController {
 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping
     public List<CategoryDTO> getAllCategories() {
-        return categoryService.getAllCategories();
+        return categoryService.findAllCategories();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
-        return ResponseEntity.ok(categoryService.getCategoryById(id));
+    public CategoryDTO getCategory(@PathVariable Long id) {
+        return categoryService.findCategoryById(id);
     }
 
     @PostMapping
-    public CategoryDTO createCategory(@RequestBody CategoryDTO categoryDTO) {
-        return categoryService.createCategory(categoryDTO);
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    public void createCategory(@RequestBody CategoryDTO categoryDTO) {
+        categoryService.createCategory(categoryDTO);
     }
 }
