@@ -5,7 +5,6 @@ import com.example.backend_lab2.entity.Location;
 import com.example.backend_lab2.repository.LocationRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.geolatte.geom.G2D;
-import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +37,18 @@ public class LocationService {
         return locations.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public List<LocationDTO> getLocationsWithinRadius(Point<G2D> center, double radius) {
+    public List<LocationDTO> getLocationsWithinRadius(double longitude, double latitude, double radius) {
+        if (radius < 0) {
+            throw new IllegalArgumentException("Radius must not be negative.");
+        }
+
+        org.geolatte.geom.Point<G2D> center = org.geolatte.geom.Geometries.mkPoint(new G2D(longitude, latitude), org.geolatte.geom.crs.CoordinateReferenceSystems.WGS84);
+
         List<Location> locations = locationRepository.findAllWithinRadius(center, radius);
-        return locations.stream().map(this::toDTO).collect(Collectors.toList());
+
+        return locations.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     public LocationDTO createLocation(LocationDTO locationDTO) {
@@ -78,7 +86,11 @@ public class LocationService {
         dto.setPublic(location.isPublic());
         dto.setDescription(location.getDescription());
         dto.setCategoryId(location.getCategoryId());
-        dto.setCoordinate(location.getCoordinate().toString());
+        if (location.getCoordinate() != null) {
+            dto.setCoordinate(location.getCoordinate().toString()); // String representation
+            dto.setLongitude(location.getCoordinate().getPosition().getLon()); // Extract longitude
+            dto.setLatitude(location.getCoordinate().getPosition().getLat());  // Extract latitude
+        }
         dto.setCreatedAt(location.getCreatedAt());
         dto.setLastModified(location.getLastModified());
         return dto;

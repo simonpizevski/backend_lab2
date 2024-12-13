@@ -10,6 +10,8 @@ public class LocationDTO {
     private boolean isPublic;
     private String description;
     private String coordinate;
+    private double longitude;
+    private double latitude;
     private LocalDateTime createdAt;
     private LocalDateTime lastModified;
 
@@ -83,5 +85,21 @@ public class LocationDTO {
 
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 }

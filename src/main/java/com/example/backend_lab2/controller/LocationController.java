@@ -3,7 +3,6 @@ package com.example.backend_lab2.controller;
 import com.example.backend_lab2.dto.LocationDTO;
 import com.example.backend_lab2.service.LocationService;
 import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,8 +43,7 @@ public class LocationController {
             @RequestParam double longitude,
             @RequestParam double radius) {
 
-        Point center = geometryFactory.createPoint(new org.locationtech.jts.geom.Coordinate(longitude, latitude));
-        return ResponseEntity.ok(locationService.getLocationsWithinRadius(center, radius));
+        return ResponseEntity.ok(locationService.getLocationsWithinRadius(latitude, longitude, radius));
     }
 
     @PostMapping
